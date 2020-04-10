@@ -29,6 +29,7 @@
         "@websanova/vue-auth": "^3.0.5-beta",
         "admin-lte": "^3.0",
         "es6-promise": "^4.2.8",
+        "svg-to-pdfkit": "^0.1.8",
         "vue-axios": "^2.1.5"
     }
 }

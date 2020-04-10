@@ -34,10 +34,18 @@ Route::prefix('v1')->group(function () {
         
         // Below mention routes are available only for the authenticated users.
         Route::middleware('auth:api')->group(function () {
+            // update
+            Route::post('update', 'AuthController@update');
+            // uploadProfilPict
+            Route::post('upload-photo', 'AuthController@uploadProfilPict');
             // Get user info
             Route::get('user', 'AuthController@user');
             // Logout user from application
             Route::post('logout', 'AuthController@logout');
         });
     });
+    Route::middleware(['auth:api', 'role:1'])->group(function () {
+        
+    });
+
 });

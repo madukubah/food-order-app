@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Model\Role;
 
-
-class RoleController extends Controller
+class MenuController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Role::all();
+        //
     }
 
     /**

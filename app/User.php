@@ -10,6 +10,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
+    public const PHOTO_PATH = "uploads/users";
 
     /**
      * The attributes that are mass assignable.
