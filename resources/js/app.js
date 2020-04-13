@@ -18,10 +18,23 @@ import VueAxios from 'vue-axios';
 import axios from 'axios';
 import VueAuth from '@websanova/vue-auth';
 import auth from './auth';
+// import VueToast from 'vue-toast-notification';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import VuejsClipper from 'vuejs-clipper'
+
+// Install BootstrapVue
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
+
+Vue.use(VuejsClipper)
+
+
 
 // Set Vue globally
 window.Vue = Vue
 
+// Vue.use(VueToast);
 // Set Vue router
 Vue.router = router
 Vue.use(VueRouter)
@@ -31,6 +44,9 @@ Vue.use(VueAxios, axios)
 axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api/v1`
 Vue.use(VueAuth, auth)
 Vue.prototype.$appName = 'My App'
+
+Vue.prototype.$baseUrl = process.env.MIX_APP_URL;
+
 
 // Load Index
 Vue.component('index', Index)

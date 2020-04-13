@@ -44,8 +44,28 @@ Route::prefix('v1')->group(function () {
             Route::post('logout', 'AuthController@logout');
         });
     });
+
     Route::middleware(['auth:api', 'role:1'])->group(function () {
-        
+        Route::resource('/menus', 'Admin\MenuController')->only('store', 'update', 'destroy');
+        Route::resource('/customers', 'Admin\CustomerController')->only('index', 'show', 'update', 'destroy' );
+
+        Route::resource('/products', 'Admin\ProductController')->only('store', 'update', 'destroy');
+        Route::post('/add-image/{product_id}', 'Admin\ProductController@addImage');
+        Route::delete('/delete-image/{image_id}', 'Admin\ProductController@destroyImage');
+
+        Route::get('/get-orders/{status}', 'User\OrderController@getOrders');
+
+    });
+    
+    Route::middleware(['auth:api'])->group(function () {
+        Route::get('/menus', 'Admin\MenuController@index');
+        Route::get('/products', 'Admin\ProductController@index');
+    });
+
+    Route::middleware(['auth:api',  'role:0'])->group(function () {
+        Route::resource('/orders', 'User\OrderController')->only('index', 'store', 'update', 'destroy');
+        Route::put('/cancel-orders/{payment_id}', 'User\OrderController@cancelOrder');
+        Route::post('/trf-img/{payment_id}', 'User\OrderController@addTrfImage');
     });
 
 });

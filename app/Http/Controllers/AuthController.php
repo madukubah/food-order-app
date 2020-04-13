@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Validator;
 use App\User;
+use App\Model\Customer;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -15,6 +16,8 @@ class AuthController extends Controller
     {
         $v = Validator::make($request->all(), [
             'name' => 'required|min:3',
+            'phone' => 'required',
+            'address' => 'required',
             'email' => 'required|email|unique:users',
             'password'  => 'required|min:3|confirmed',
         ]);
@@ -25,13 +28,21 @@ class AuthController extends Controller
                 'errors' => $v->errors()
             ], 422);
         }
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user           = new User();
+        $user->name     = $request->name;
+        $user->email    = $request->email;
+        $user->phone    = $request->phone;
+        $user->address  = $request->address;
         $user->password = Hash::make($request->password);
-        // $user->password = bcrypt($request->password);
         $user->save();
-        return response()->json(['status' => 'success'], 200);
+
+        $customer = new Customer();
+        $customer->code = "CUSTOMER_".time();
+        $customer->save();
+        
+        $customer->user()->save( $user );
+
+        return response()->json(['status' => 'success' ], 200);
     }
     /**
      * Login user and return a token
@@ -144,7 +155,7 @@ class AuthController extends Controller
             $user->profile_pict = $fileName;
             $user->save();
         }
-        return response()->json(['status' => 'success'], 200);
+        return response()->json(['status' => 'success', 'url' => ''.$fileName ], 200);
     }
     /**
      * Refresh JWT token

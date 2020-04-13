@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Model\Menu;
+use Illuminate\Support\Facades\Validator;
+
 
 class MenuController extends Controller
 {
@@ -14,7 +17,16 @@ class MenuController extends Controller
      */
     public function index()
     {
-        //
+        $menus =  Menu::where("menu_id", NULL )->with('menus')->get();
+        // $menus =  Menu::where("menu_id", NULL )->with('products', 'menus')->get();
+        foreach( $menus as $menu )
+        {
+            foreach( $menu->menus as $m )
+            {
+                $m->menus;
+            }   
+        }
+        return $menus;
     }
 
     /**
@@ -35,7 +47,29 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validationConfig = [
+            'name' => 'required|min:3',
+        ];
+
+        if( $request->input('menu_id') != NULL )
+        {
+            $validationConfig[ 'menu_id' ] = 'required|numeric';
+        }
+
+        $v = Validator::make($request->all(), $validationConfig);
+        if ($v->fails())
+        {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+        $entity = Menu::createMenu([
+            "name"   => $request->name,
+        ]);
+        $entity->menu_id = $request->menu_id;
+        $entity->save();
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -69,7 +103,26 @@ class MenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $v = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+        ]);
+        if ($v->fails())
+        {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+        $entity = Menu::find( $id );
+        if( $entity == NULL )
+            return response()->json([
+                'status' => 'Record not found'
+            ], 404);
+
+        $entity->update([
+            "name" => $request->name
+        ]);
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -80,6 +133,26 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $entity = Menu::find( $id );
+        if( $entity == NULL )
+            return response()->json([
+                'status' => 'Record not found'
+            ], 404);
+        $this->deleteBranch( $entity->menus );
+        $entity->delete();    
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    private function deleteBranch( $menus ){
+
+        foreach( $menus as $menu )
+        {
+            if(  count( $menu->menus ) > 0 )
+            {
+                $this->deleteBranch( $menu->menus );
+            }  
+            else
+                $menu->delete();
+        }
     }
 }

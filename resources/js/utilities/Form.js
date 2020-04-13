@@ -6,8 +6,9 @@ class Form {
      *
      * @param {object} data
      */
-    constructor(data) {
+    constructor(data, toast) {
         this.originalData = data;
+        this.toast = toast;
 
         for (let field in data) {
             this[field] = data[field];
@@ -90,20 +91,38 @@ class Form {
      */
     submit(requestType, url) {
         return new Promise((resolve, reject) => {
-            axios[requestType](url, this.data())
+            axios[requestType](
+                url, 
+                this.data()
+                )
                 .then(response => {
                     this.onSuccess(response.data);
 
                     resolve(response.data);
+                    // this.showToast();
                 })
                 .catch(error => {
                     this.onFail(error.response.data.errors);
-
                     reject(error.response.data.errors);
                 });
         });
     }
 
+
+     /**
+     * Handle a successful form submission.
+     *
+     * @param {object} data
+     */
+    showToast() {
+        if( this.toast !== null && this.toast !== undefined )
+            this.toast.toast(`Berhasil Ubah Akun`, {
+                title: 'Success',
+                variant: 'success',
+                autoHideDelay: 5000,
+                appendToast: true
+            });
+    }
 
     /**
      * Handle a successful form submission.
@@ -111,7 +130,7 @@ class Form {
      * @param {object} data
      */
     onSuccess(data) {
-        this.reset();
+        // this.reset();
     }
 
 

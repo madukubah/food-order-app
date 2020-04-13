@@ -33,15 +33,31 @@ let routes = [
         },
         children: [
             {
+                path: 'dashboard',
+                name: 'admin.dashboard',
+                component: require('./views/account').default
+            },
+            {
+                path: 'account',
+                name: 'account',
+                component: require('./views/account').default
+            },
+            {
                 path: 'users',
                 name: 'admin.users',
                 component: require('./views/users').default
             }
             ,
             {
-                path: 'roles',
-                name: 'admin.roles',
-                component: require('./views/roles').default
+                path: 'menus',
+                name: 'admin.menus',
+                component: require('./views/admin/menus').default
+            }
+            ,
+            {
+                path: 'product',
+                name: 'admin.product',
+                component: require('./views/admin/menus').default
             }
         ]
     },
