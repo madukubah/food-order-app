@@ -60,6 +60,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::get('/menus', 'Admin\MenuController@index');
         Route::get('/products', 'Admin\ProductController@index');
+        Route::get('/products/{id}', 'Admin\ProductController@show');
     });
 
     Route::middleware(['auth:api',  'role:0'])->group(function () {

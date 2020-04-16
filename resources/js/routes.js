@@ -55,9 +55,9 @@ let routes = [
             }
             ,
             {
-                path: 'product',
-                name: 'admin.product',
-                component: require('./views/admin/menus').default
+                path: 'products',
+                name: 'admin.products',
+                component: require('./views/admin/products').default
             }
         ]
     },

@@ -22,17 +22,15 @@ import auth from './auth';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import VuejsClipper from 'vuejs-clipper'
 
+// Set Vue globally
+window.Vue = Vue
+
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
 Vue.use(VuejsClipper)
-
-
-
-// Set Vue globally
-window.Vue = Vue
 
 // Vue.use(VueToast);
 // Set Vue router

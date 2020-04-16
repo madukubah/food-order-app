@@ -41,9 +41,9 @@
                       </router-link>
                   </li>
                   <li class="nav-item">
-                      <router-link tag="a" :to="{ name : 'admin.product' }" class="nav-link">
+                      <router-link tag="a" :to="{ name : 'admin.products' }" class="nav-link">
                           <i class="nav-icon fas fa-th"></i>
-                          <p>Product</p>
+                          <p>Products</p>
                       </router-link>
                   </li>
                   <li class="nav-item">

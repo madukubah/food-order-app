@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::with('images')->paginate(10);//->links();
+        return Product::with('images', 'menu')->paginate(10);//->links();
     }
 
     /**
@@ -70,7 +70,16 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $entity = Product::find( $id );
+        if( $entity == NULL )
+            return response()->json([
+                'status' => 'Record not found'
+            ], 404);
+
+        $entity->images;
+        $entity->menu;
+        
+        return response()->json( $entity , 200);
     }
 
     /**
@@ -172,7 +181,11 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'Record not found'
             ], 404);
-
+        try {
+            unlink( Product::PHOTO_PATH."/".$entity->url );
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         $entity->delete();    
         return response()->json(['status' => 'success'], 200);
     }
@@ -190,8 +203,26 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'Record not found'
             ], 404);
-
+        foreach( $entity->images as $image )
+        {
+            $this->_destroyImage($image->id);
+        }
         $entity->delete();    
         return response()->json(['status' => 'success'], 200);
+    }
+
+    private function _destroyImage($id)
+    {
+        $entity = Image::find( $id );
+        if( $entity == NULL )
+            return response()->json([
+                'status' => 'Record not found'
+            ], 404);
+        try {
+            unlink( Product::PHOTO_PATH."/".$entity->url );
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        $entity->delete();    
     }
 }
